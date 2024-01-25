@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
 import axios from "axios";
 import ReactModal from "react-modal";
 
 const reSendResult = () => {
-    const server = 'http://10.10.21.89:8000'
+    
+    // 분류를 선택하지 않을 시 alert을 띄우는 코드
+
     const checkedRadio = document.querySelector('input[name=result]:checked');
 
     if (!checkedRadio) {
@@ -12,11 +13,17 @@ const reSendResult = () => {
     }
 
 
+    // 분류는 체크하고 제출을 클릭할 시
+    // 서버에 정보를 전송 후 "/" 페이지로 이동하는 코드
+
+    const server = 'http://10.10.21.89:8000'
+
     axios.post(server+'/result/',{
       filename : window.sessionStorage.getItem('filename'),
       result : document.querySelector('input[name=result]:checked').value
     },
     {headers:{'Content-Type': 'application/x-www-form-urlencoded'}})
+    .then(sessionStorage.clear())
     .then(alert("응답해주셔서 감사합니다.")).then(window.location.href='/')
 }
 
@@ -48,14 +55,6 @@ function CheckModal (props) {
             justifyContent: 'center',
         },
     }
-
-
-    const [selectedValue, setSelectedValue] = useState(0);
-
-    const handleRadioChange = (value) => {
-        setSelectedValue(value);
-    };
-
     return(
         <ReactModal style={ExplainModalStyle} isOpen={props.explainModal}>
             <div className="group">

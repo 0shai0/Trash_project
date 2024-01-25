@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from "./Modal";
 
@@ -10,7 +9,10 @@ function PhotoUpload() {
     const [showButton, setShowButton] = useState(false);
     const [loading,setLoading] = useState(null);
     const [addlearn,setAL] = useState(false);
-    const navigate = useNavigate();
+
+
+    // DB에 특정 개수가 쌓일 시 /maintainance로 이동 후
+    // 모델이 학습하고 다 된다면 원래 페이지로 돌아온다는 코드
 
     useEffect(() => {
         axios.post('http://10.10.21.89:8000/check/')
@@ -38,20 +40,28 @@ function PhotoUpload() {
         }
     }
 
+
+    // 이미지 파일이 아닌 것을 첨부할 시 실행되는 코드
+
     const uploadfile = (e) => {
         if (e.target.files[0] != null) {
-        const file_extension = e.target.files[0].name.slice(-4).toLowerCase()
-        const file_allow = ['.jpg','.png','.svg','jpeg','webp']
-        if(!file_allow.includes(file_extension)){
-            alert("이미지 파일만 첨부해주세요.")
-        }else{
-            setFile(e.target.files[0])
+
+            const file_extension = e.target.files[0].name.slice(-4).toLowerCase()
+            const file_allow = ['.jpg','.png','.svg','jpeg','webp']
+
+            if(!file_allow.includes(file_extension)){
+                alert("이미지 파일만 첨부해주세요.")
+            }   else{
+                setFile(e.target.files[0])
+            }
         }
     }
-    }
+
+
+    // 이미지 파일을 첨부해 서버에 전송하는 코드
 
     const sendfile = () => {  
-        const server = 'http://172.16.5.6:8000'
+        const server = 'http://10.10.21.89:8000'
         const formData = new FormData();
         formData.append("files",file)
         axios.post(server+'/file/',formData,
@@ -62,6 +72,9 @@ function PhotoUpload() {
         })}
 
 
+    // 이미지 이름이 너무 길다면 maxLength에서 자르고
+    // 이후는 ...으로 나타내는 코드
+
     const truncateFileName = (fileName, maxLength) => {
 
         if (fileName.length <= maxLength) {
@@ -71,6 +84,11 @@ function PhotoUpload() {
         }
         
     };
+
+
+    // 변수 file이 변경되면 setShowButton을 false로 반환 후 변경
+    // 결과적으로 ${file.name ? 'hovered' : ''}`}과 같이
+    // 클래스 이름을 붙였다 없애는 역할을 하는 코드
 
     useEffect(() => {
         setShowButton(!!file);

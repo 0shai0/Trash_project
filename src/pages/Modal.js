@@ -1,9 +1,12 @@
 import ReactModal from "react-modal";
-import {ConfusionMatrix} from "react-confusion-matrix";
+import { ConfusionMatrix } from "react-confusion-matrix";
 import "../css/Modal.css"
 
 
 function Modal(props) {
+
+    // ConfusionMatrix 표 안의 값을 넣는 코드
+
     const dataArray = [
         [467, 18, 4, 6, 4, 2],
         [6, 376, 10, 10, 6, 7],
@@ -45,12 +48,6 @@ function Modal(props) {
             alignItems: 'center'
         },
     };
-    const paragraphStyle = {
-        fontSize: "16px",
-        lineHeight: "1.6",
-        color: "#333",
-        marginBottom: "15px",
-      };
 
     return(
         <ReactModal style={ModalStyle} isOpen={props.modal} onRequestClose={() => props.setModal(false)}  ariaHideApp={false}>
